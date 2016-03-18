@@ -1,0 +1,6 @@
+
+<ul>
+[% FOR user IN users %]
+  <li> <b>[% user.name %]</b> ([% user.username %]) </li>
+[% END %]
+</li>

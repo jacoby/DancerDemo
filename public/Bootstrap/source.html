@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Requests -- Second Generation </title>
+<link type="image/vnd.microsoft.icon" rel="icon" href="/images/genomics.ico" />
+
+<!-- FROM BOOTSTRAP -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="sticky-footer.css" rel="stylesheet">
+<!-- 
+ -->
+    <!-- Custom styles for this template -->
+
+<!-- FROM BOOTSTRAP -->
+
+<!-- 
+    <link rel="stylesheet" href="/css/user_share.css" />
+    <link rel="stylesheet" href="/css/secondgen.css" />
+    <link rel="stylesheet" type="text/css" href="/css/less/gcore_make_customer.1.css" />
+ -->
+    <style>
+/* 
+    Determining which UI elements are crucial and which can 
+    be jettisoned
+*/
+
+/* BUTTON */
+.button {
+    background-color:         #bbb ;
+    background-image:         url(/images/trans-fade_up-white.png);
+    background-position:      0% 60% ;
+    background-repeat:        repeat-x ;
+    border:                   1px solid #999 ;
+    color:                    #333 ;
+    display:                  inline-block ;
+    font-size:                12px ;
+    font-weight:              100 !important ;
+    line-height:              14px ;
+    margin:                   4px 5px 5px ;
+    padding:                  2px 5px ;
+    text-align:               center ;
+    text-decoration:          none ;
+    }
+.button:visited {
+    color:                    #333 ;
+    }
+.button:active{
+    background-color:         #ffc202;
+    background-position:      0% 30% ;
+    background-image:         url(/images/trans-fade_up-white.png);
+    text-shadow:              1px 1px 4px #fff ;
+    }
+.button:disabled,
+.button:disabled:visited ,
+.button:disabled:hover ,
+.button:disabled:active {
+    background-color:         #bbb ;
+    background-image:         url(/images/trans-fade_up-white.png);
+    background-position:      0% 60% ;
+    background-repeat:        repeat-x ;
+    border:                   1px solid #999 ;
+    box-shadow:               2px 2px 3px #999 ;
+    color:                    #999 ;
+    display:                  inline-block ;
+    }
+
+/* Table and TableSorter */
+
+table {
+/*  border: 1px solid #999;
+  box-shadow: 0 0 2px #000 ;
+  */
+  margin-bottom: 2em;
+  }
+table td,
+table th {
+  border: 1px solid #eee;
+  padding-left: .5em ;
+  padding-right: .2em ;
+  text-align: left;
+  vertical-align: top ;
+  font-size: 12px !important;
+/*  
+  line-height: 18px ;
+*/
+  }
+
+
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+  background-image: url(/images/TableSorter/tablesorter_bg.png);
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding-right: 10px;
+}
+.tablesorter-default thead .headerSortUp,
+.tablesorter-default thead .tablesorter-headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc {
+  background-image: url(/images/TableSorter/tablesorter_up.png);
+  /*background-color: #888;*/
+}
+.tablesorter-default thead .headerSortDown,
+.tablesorter-default thead .tablesorter-headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc {
+  background-image: url(/images/TableSorter/tablesorter_dn.png);
+  /*background-color: #888;*/
+  /*border-bottom: #000 2px solid;*/
+}
+.tablesorter-default thead .sorter-false {
+  background-image: none;
+  cursor: default;
+  padding: 4px;
+}
+/* tfoot */
+.tablesorter-default tfoot .tablesorter-headerSortUp,
+.tablesorter-default tfoot .tablesorter-headerSortDown,
+.tablesorter-default tfoot .tablesorter-headerAsc,
+.tablesorter-default tfoot .tablesorter-headerDesc {
+  border-top: #000 2px solid;
+}
+/* hovered row colors */
+.tablesorter-default tbody > tr:hover > td,
+.tablesorter-default tbody > tr.even:hover > td,
+.tablesorter-default tbody > tr.odd:hover > td {
+  background: #fff!important;
+}
+/* column selector - it is likely that we will use this
+    functionality for all more recent tablesorter projects
+    thus am including it in the overall tablesorter CSS.
+    Mostly just copied from demo.
+*/
+#colSelect1:checked + label {
+  background: #5797d7;
+  border-color: #555;
+}
+#colSelect1:checked ~ #columnSelector {
+  display: block;
+}
+.options th.narrow {
+  width: 150px;
+}
+.columnSelectorWrapper {
+  position: relative;
+  margin: 10px 0;
+  display: inline-block;
+  padding: 3px;
+  /*border: #555 1px solid;*/
+  background: #fff;
+}
+.columnSelector,
+.hidden {
+  display: none;
+}
+.columnSelector {
+  width: 200px;
+  position: absolute;
+  top: 30px;
+  padding: 10px;
+  background: #fff;
+  border: #99bfe6 1px solid;
+  border-radius: 5px;
+}
+.columnSelector label {
+  display: block;
+  text-align: left;
+}
+.columnSelector label:nth-child(1) {
+  border-bottom: #99bfe6 solid 1px;
+  margin-bottom: 5px;
+}
+.columnSelector input {
+  margin-right: 5px;
+}
+.columnSelector .disabled {
+  color: #ddd;
+}
+/* Need some elements copied from column selector */
+#colSelectMain:checked + label,
+#colSelectShared:checked + label {
+  background: #5797d7;
+  border-color: #555;
+}
+#colSelectMain:checked ~ #columnSelectorMain,
+#colSelectShared:checked ~ #columnSelectorShared {
+  display: block;
+}
+
+
+.tablesorter-filter {
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+<!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"> SecondGen Requests </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/cgi-bin/wiki">Lab Notebook</a></li>
+            <li><a href="/cgi-bin/genomics/">Genomics</a></li>
+            <li><a href="/cgi-bin/secondgen/">SecondGen</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+<!-- Fixed navbar -->
+
+<div class="container">
+<!-- REQUESTS -->
+
+    <div id="req_block">
+        <a class="button" href="/cgi-bin/secondgen/requests.cgi"> Show 100 Most Recent </a>
+        <a class="button" href="/cgi-bin/secondgen/requests.cgi?c=300"> Show 300 Most Recent </a>
+        <a class="button" href="/cgi-bin/secondgen/requests.cgi?pi=all"> Show All Requests </a>
+        <div id="choose_pi" class="button"> Choose a Lab Director </div>
+    </div>
+
+<!-- tablesorter replacing hidr for row control -->
+    <div id="row_block">
+        <div>
+            <h3>Sequence Engines</h3>
+                    <button class="search button" data-filter-column="4" data-filter-text="hiseq_ho">hiseq_ho</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="hiseq_output">hiseq_output</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="hiseq_rapid">hiseq_rapid</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="hiseqrapid">hiseqrapid</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="miseq">miseq</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="qc">qc</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="wideseq">wideseq</button>
+                    <button class="search button" data-filter-column="4" data-filter-text="">Clear</button>
+        </div>
+
+        <div>
+            <h3>Status</h3>
+                    <button class="search button" data-filter-column="10" data-filter-text="In Progress">In Progress</button>
+                    <button class="search button" data-filter-column="10" data-filter-text="In Queue">In Queue</button>
+                    <button class="search button" data-filter-column="10" data-filter-text="Terminated">Terminated</button>
+                    <button class="search button" data-filter-column="10" data-filter-text="">Clear</button>
+        </div>
+    </div>
+<!-- tablesorter replacing hidr for row control -->
+
+<!-- for new tablesorter -->
+    <div class="center">
+        <span class="button table_print">Print table</span>
+        <span class="columnSelectorWrapper">
+            <input id="colSelect1" type="checkbox" class="hidden">
+            <label class="button columnSelectorButton" for="colSelect1">Columns to display</label>
+            <div id="columnSelector" class="columnSelector"></div>
+        </span>
+    </div>
+<!-- for new tablesorter -->
+
+    <table class="sorted" id="requests_table">
+
+        <thead>
+            <tr>
+                                <th data-placeholder="Search"> Request </th>
+                <th data-placeholder="Search"> Lab Director </th>
+                <th data-placeholder="Search"> Request Name</th>
+                <th data-placeholder="Search"> Species </th>
+                <th data-placeholder="Search"> Sequence Engine </th>            
+                <th data-placeholder="Search"> Assay </th>
+                <th data-placeholder="Search"> Barcodes? </th>
+                <th data-placeholder="Search"> Barcodes Filled? </th>
+                <th data-placeholder="Search"> Source </th>
+                <th data-placeholder="Search"> Wiki </th>
+                <th data-placeholder="Search"> Status </th>
+                <th data-placeholder="Search"> Acc Count </th>
+                <th data-placeholder="Search"> Analysis Type </th>
+                <th data-placeholder="Search"> Creation Date </th>
+            </tr>
+        </thead>
+
+        <tbody>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01424" href="/cgi-bin/secondgen/request.cgi?id=01424"> 01424 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Aflotoxin QC </td>
+                <td> maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01424_WOLOSHUK_AFLOTOXIN_QC_QC_2016-01-28">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 3 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-28 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01423" href="/cgi-bin/secondgen/request.cgi?id=01423"> 01423 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/119/" title="link to Customer Page">Zhang, Guangjun</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=119" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Long Fin Seq </td>
+                <td> Zebra Fish </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01423_GJZHANG_LONG_FIN_SEQ_HISEQ_2016-01-28">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-28 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01422" href="/cgi-bin/secondgen/request.cgi?id=01422"> 01422 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/119/" title="link to Customer Page">Zhang, Guangjun</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=119" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Long Fin Replacement Samples </td>
+                <td> Zebra Fish </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01422_GJZHANG_LONG_FIN_REPLACEMENT_SAMPLES_HISEQ_2016-01-28">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-28 </td>
+            </tr>
+                        <tr class="hiseqrapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01421" href="/cgi-bin/secondgen/request.cgi?id=01421"> 01421 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/252/" title="link to Customer Page">Mengiste, Tesfaye</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=252" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Sorghum smRNA Seq </td>
+                <td> Sorghum </td>
+                <td> hiseqrapid </td>
+                <td> HiSeq Rapid 1X50 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/xr_01421_mengiste_sorghum_rna_seq_2016-01-27">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 18 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-05-19 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01420" href="/cgi-bin/secondgen/request.cgi?id=01420"> 01420 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> More QC- Maize and fungus </td>
+                <td> Maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01420_WOLOSHUK_MORE_QC-_MAIZE_AND_FUNGUS_QC_2016-01-27">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-27 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01419" href="/cgi-bin/secondgen/request.cgi?id=01419"> 01419 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/241/" title="link to Customer Page">Ma, Jianxin</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=241" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq14 </td>
+                <td> pcr products </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01419_MAJIANXIN_WIDESEQ14_MISEQ_2016-01-27">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 26 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-27 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01418" href="/cgi-bin/secondgen/request.cgi?id=01418"> 01418 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/119/" title="link to Customer Page">Zhang, Guangjun</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=119" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Long Fin </td>
+                <td> Zebrafish </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01418_GJZHANG_LONG_FIN_HISEQ_2016-01-27">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-27 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01417" href="/cgi-bin/secondgen/request.cgi?id=01417"> 01417 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/194/" title="link to Customer Page">Kirchmaier, Ann</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=194" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> 4th Set QC </td>
+                <td> mammal  </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01417_KIRCHMAIER_4TH_SET_QC_QC_2016-01-26">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-26 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01416" href="/cgi-bin/secondgen/request.cgi?id=01416"> 01416 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/11/" title="link to Customer Page">Andrisani, Ourania</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=11" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> HepAD38 </td>
+                <td> human </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01416_ANDRISANI_HEPAD38_RAPID_2016-01-25">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-25 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01415" href="/cgi-bin/secondgen/request.cgi?id=01415"> 01415 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/252/" title="link to Customer Page">Mengiste, Tesfaye</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=252" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Striga Resequence </td>
+                <td> striga </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01415_MENGISTE_STRIGA_RESEQUENCE_HISEQ_2016-01-25">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-25 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01414" href="/cgi-bin/secondgen/request.cgi?id=01414"> 01414 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Aflatoxin  </td>
+                <td> Maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01414_WOLOSHUK_AFLATOXIN__QC_2016-01-22">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 3 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-22 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01413" href="/cgi-bin/secondgen/request.cgi?id=01413"> 01413 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/405/" title="link to Customer Page">Weil, Clifford F.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=405" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Exome capture 3 </td>
+                <td> maize </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01413_WEIL_EXOME_CAPTURE_3_HISEQ_2016-01-22">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 20 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-22 </td>
+            </tr>
+                        <tr class="wideseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01412" href="/cgi-bin/secondgen/request.cgi?id=01412"> 01412 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/495/" title="link to Customer Page">Lisch, Damon</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=495" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Mu seq </td>
+                <td> maize </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01412_LISCH_MU_SEQ_SCRATCH_2016-01-22">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 18 </td>
+                <td> Amplicon </td>
+                <td> 2016-01-22 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01411" href="/cgi-bin/secondgen/request.cgi?id=01411"> 01411 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/449/" title="link to Customer Page">Hoagland, Lori A.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=449" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> BACTERIAL CARROT ENDOPHYTES </td>
+                <td> bacteria (var) </td>
+                <td> miseq </td>
+                <td> MiSeq 2x300 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01411_HOAGLAND_BACTERIAL_CARROT_ENDOPHYTES_MISEQ_2016-01-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 58 </td>
+                <td> Amplicon </td>
+                <td> 2016-01-21 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01410" href="/cgi-bin/secondgen/request.cgi?id=01410"> 01410 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/449/" title="link to Customer Page">Hoagland, Lori A.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=449" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> bacterial carrot endophytes  </td>
+                <td> bacteria  (var) </td>
+                <td> miseq </td>
+                <td> MiSeq 2x300 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01410_HOAGLAND_BACTERIAL_CARROT_ENDOPHYTES_MISEQ_2016-01-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 58 </td>
+                <td> Amplicon </td>
+                <td> 2016-01-21 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01409" href="/cgi-bin/secondgen/request.cgi?id=01409"> 01409 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/6/" title="link to Customer Page">Aime, M. Catherine</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=6" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Uromyces appendiculatus MP2-Seq </td>
+                <td> Uromyces appendiculatus </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01409_AIME_UROMYCES_APPENDICULATUS_MP2-SEQ_HISEQ_2016-01-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-21 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01408" href="/cgi-bin/secondgen/request.cgi?id=01408"> 01408 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/6/" title="link to Customer Page">Aime, M. Catherine</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=6" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Uromyces appendiculatus MP-Seq </td>
+                <td>  Uromyces appendiculatus </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01408_AIME_UROMYCES_APPENDICULATUS_MP-SEQ_HISEQ_2016-01-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-21 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01407" href="/cgi-bin/secondgen/request.cgi?id=01407"> 01407 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/6/" title="link to Customer Page">Aime, M. Catherine</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=6" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Uromyces appendiculatus PE-Seq </td>
+                <td> Uromyces appendiculatus </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01407_AIME_UROMYCES_APPENDICULATUS_PE-SEQ_RAPID_2016-01-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-21 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01406" href="/cgi-bin/secondgen/request.cgi?id=01406"> 01406 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/367/" title="link to Customer Page">Swihart, Rob</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=367" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Allegheny woodrat-MP </td>
+                <td> woodrat </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01406_SWIHART_ALLEGHENY_WOODRAT-MP_HISEQ_2016-01-20">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-20 </td>
+            </tr>
+                        <tr class="hiseqrapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01405" href="/cgi-bin/secondgen/request.cgi?id=01405"> 01405 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/367/" title="link to Customer Page">Swihart, Rob</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=367" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Allegheny woodrat </td>
+                <td> woodrat </td>
+                <td> hiseqrapid </td>
+                <td> Rapid 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01405_SWIHART_ALLEGHENY_WOODRAT_HISEQ_2016-01-20">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-20 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01404" href="/cgi-bin/secondgen/request.cgi?id=01404"> 01404 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Aflatoxin 3 samples </td>
+                <td> Maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01404_WOLOSHUK_AFLATOXIN_3_SAMPLES_QC_2016-01-20">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 3 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-20 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01403" href="/cgi-bin/secondgen/request.cgi?id=01403"> 01403 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/241/" title="link to Customer Page">Ma, Jianxin</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=241" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq14 </td>
+                <td> pcr products </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01403_MAJIANXIN_WIDESEQ14_MISEQ_2016-01-20">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 10 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-20 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01402" href="/cgi-bin/secondgen/request.cgi?id=01402"> 01402 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/31/" title="link to Customer Page">Bhunia, Arun K.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=31" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Mice 1 sample </td>
+                <td> Mus musculus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01402_BHUNIA_MICE_1_SAMPLE_QC_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01401" href="/cgi-bin/secondgen/request.cgi?id=01401"> 01401 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/522/" title="link to Customer Page">Widhalm, Josh</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=522" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq14 </td>
+                <td> plasmid </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01401_JWIDHALM_WIDESEQ14_MISEQ_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01400" href="/cgi-bin/secondgen/request.cgi?id=01400"> 01400 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> 1/15/16 </td>
+                <td> Salmonella </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01400_OLIVER_1_15_16_QC_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01399" href="/cgi-bin/secondgen/request.cgi?id=01399"> 01399 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/11/" title="link to Customer Page">Andrisani, Ourania</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=11" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> DDX5 functioning HBV rep Seq </td>
+                <td> human </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01399_ANDRISANI_DDX5_FUNCTIONING_HBV_REP_SEQ_RAPID_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01398" href="/cgi-bin/secondgen/request.cgi?id=01398"> 01398 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/282/" title="link to Customer Page">Ogas, Joseph P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=282" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq14 </td>
+                <td> plasmid </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01398_OGAS_WIDESEQ14_MISEQ_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="qc terminated">
+                <td>
+                    <a target="_blank" title="More info about request #01397" href="/cgi-bin/secondgen/request.cgi?id=01397"> 01397 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/282/" title="link to Customer Page">Ogas, Joseph P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=282" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> pkl-11-14 </td>
+                <td> arabidopsis </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01397_OGAS_PKL_11-14_QC_2016-01-19">wiki</a> </td>
+                <td> Terminated </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01396" href="/cgi-bin/secondgen/request.cgi?id=01396"> 01396 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/282/" title="link to Customer Page">Ogas, Joseph P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=282" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> pkl-11-14 </td>
+                <td> arabidopsis </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01396_OGAS_PKL_11-14_QC_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01395" href="/cgi-bin/secondgen/request.cgi?id=01395"> 01395 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/282/" title="link to Customer Page">Ogas, Joseph P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=282" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> pkl-11-14 </td>
+                <td> arabidopsis </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01395_OGAS_PKL_11-14_QC_2016-01-19">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-19 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01394" href="/cgi-bin/secondgen/request.cgi?id=01394"> 01394 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/405/" title="link to Customer Page">Weil, Clifford F.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=405" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Exome Capture 3 </td>
+                <td> maize </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01394_WEIL_EXOME_CAPTURE_3_HISEQ_2016-01-15">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-15 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01393" href="/cgi-bin/secondgen/request.cgi?id=01393"> 01393 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/194/" title="link to Customer Page">Kirchmaier, Ann</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=194" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> HL60 Third Set </td>
+                <td> Human </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01393_KIRCHMAIER_HL60_THIRD_SET_HISEQ_2016-01-15">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 3 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-15 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01392" href="/cgi-bin/secondgen/request.cgi?id=01392"> 01392 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> 3rd QC </td>
+                <td> maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01392_WOLOSHUK_3RD_QC_QC_2016-01-14">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-14 </td>
+            </tr>
+                        <tr class="wideseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01391" href="/cgi-bin/secondgen/request.cgi?id=01391"> 01391 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/6/" title="link to Customer Page">Aime, M. Catherine</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=6" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> TJ-Wideseq </td>
+                <td> Basidiomycota </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01391_AIME_TJ_WIDESEQ_SCRATCH_2016-01-14">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> WideSeq </td>
+                <td> 2016-01-14 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01390" href="/cgi-bin/secondgen/request.cgi?id=01390"> 01390 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> New QC </td>
+                <td> maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01390_WOLOSHUK_NEW_QC_QC_2016-01-13">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-13 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01389" href="/cgi-bin/secondgen/request.cgi?id=01389"> 01389 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/254/" title="link to Customer Page">Messick, Joanne</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=254" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Brazil Samples </td>
+                <td> S. aureus bacteria </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01389_MESSICK_BRAZIL_SAMPLES_HISEQ_2016-01-13">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-13 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01388" href="/cgi-bin/secondgen/request.cgi?id=01388"> 01388 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> SL476HSvC </td>
+                <td> Salmonella Heidelberg </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01388_OLIVER_SL476HSVC_QC_2016-01-13">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-13 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01387" href="/cgi-bin/secondgen/request.cgi?id=01387"> 01387 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> SL476HSvC </td>
+                <td> Salmonella Heidelberg </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01387_OLIVER_SL476HSVC_QC_2016-01-12">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-12 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01386" href="/cgi-bin/secondgen/request.cgi?id=01386"> 01386 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/273/" title="link to Customer Page">Nakatsu, Cindy</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=273" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> AB vista  day 43 day 127 </td>
+                <td> swine </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01386_NAKATSU_AB_VISTA_DAY_43_DAY_127_MISEQ_2016-01-11">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 117 </td>
+                <td> Amplicon </td>
+                <td> 2016-01-11 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01385" href="/cgi-bin/secondgen/request.cgi?id=01385"> 01385 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/334/" title="link to Customer Page">SanMiguel, Phillip J.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=334" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq13-QC </td>
+                <td> various </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01385_SANMIGUEL_WIDESEQ13_QC_QC_2016-01-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-08 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01384" href="/cgi-bin/secondgen/request.cgi?id=01384"> 01384 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/513/" title="link to Customer Page">Yingst, Sam</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=513" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> 8493 Core Library </td>
+                <td> virus </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01384_YINGST_8493_CORE_LIBRARY_HISEQ_2016-01-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-08 </td>
+            </tr>
+                        <tr class="wideseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01383" href="/cgi-bin/secondgen/request.cgi?id=01383"> 01383 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/513/" title="link to Customer Page">Yingst, Sam</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=513" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> DT8493 </td>
+                <td> virus </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> cDNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01383_YINGST_DT8493_SCRATCH_2016-01-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> WideSeq </td>
+                <td> 2016-01-08 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01382" href="/cgi-bin/secondgen/request.cgi?id=01382"> 01382 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> QC  </td>
+                <td> maize and fungus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01382_WOLOSHUK_QC__QC_2016-01-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-08 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01381" href="/cgi-bin/secondgen/request.cgi?id=01381"> 01381 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/437/" title="link to Customer Page">Deng, Qing</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=437" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Sample QC </td>
+                <td> zebra fish </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01381_DENG_SAMPLE_QC_QC_2016-01-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-08 </td>
+            </tr>
+                        <tr class="hiseqrapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01380" href="/cgi-bin/secondgen/request.cgi?id=01380"> 01380 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/143/" title="link to Customer Page">Hazbun, Tony</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=143" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Pooled-PCR-01 </td>
+                <td> yeast </td>
+                <td> hiseqrapid </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01380_AVRAMOVA_POOLED_PCR-01_HISEQ_2016-01-07">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 24 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2016-01-07 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01379" href="/cgi-bin/secondgen/request.cgi?id=01379"> 01379 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/175/" title="link to Customer Page">Johal, Giri</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=175" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> oil yellow-01 </td>
+                <td> maize </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01379_JOHAL_OIL_YELLOW-01_SCRATCH_2016-01-06">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 7 </td>
+                <td> WideSeq </td>
+                <td> 2016-01-06 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01378" href="/cgi-bin/secondgen/request.cgi?id=01378"> 01378 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/31/" title="link to Customer Page">Bhunia, Arun K.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=31" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Mice </td>
+                <td> Mus musculus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01378_BHUNIA_MICE_QC_2016-01-06">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 17 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-06 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01377" href="/cgi-bin/secondgen/request.cgi?id=01377"> 01377 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/421/" title="link to Customer Page">Xu, Jin-Rong</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=421" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Developemental stage-01 </td>
+                <td> Neurospora crassa </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01377_XU_DEVELOPEMENTAL_STAGE-01_HISEQ_2016-01-06">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2016-01-06 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01376" href="/cgi-bin/secondgen/request.cgi?id=01376"> 01376 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/253/" title="link to Customer Page">Mesecar, Andrew</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=253" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> MHV </td>
+                <td> MHV </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01376_MESECAR_MHV_SCRATCH_2016-01-06">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 3 </td>
+                <td> WideSeq </td>
+                <td> 2016-01-06 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01375" href="/cgi-bin/secondgen/request.cgi?id=01375"> 01375 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> MethodComp </td>
+                <td> Salmonella Heidelberg </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01375_OLIVER_METHODCOMP_QC_2016-01-05">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2016-01-05 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01374" href="/cgi-bin/secondgen/request.cgi?id=01374"> 01374 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/241/" title="link to Customer Page">Ma, Jianxin</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=241" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq13 </td>
+                <td> pcr products </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01374_MAJIANXIN_WIDESEQ13_MISEQ_2016-01-05">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 7 </td>
+                <td> WideSeq </td>
+                <td> 2016-01-05 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01373" href="/cgi-bin/secondgen/request.cgi?id=01373"> 01373 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/143/" title="link to Customer Page">Hazbun, Tony</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=143" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> fluorimetry qc </td>
+                <td> East </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01373_HAZBUN_FLUORIMETRY_QC_QC_2015-12-23">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 24 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-23 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01372" href="/cgi-bin/secondgen/request.cgi?id=01372"> 01372 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> troubleshooting2 </td>
+                <td> Salmonella </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01372_OLIVER_TROUBLESHOOTING2_QC_2015-12-23">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-23 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01371" href="/cgi-bin/secondgen/request.cgi?id=01371"> 01371 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/519/" title="link to Customer Page">Henagan, Tara</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=519" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> muscle cells-01 </td>
+                <td> human </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01371_THENAGAN_MUSCLE_CELLS-01_QC_2015-12-23">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 60 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-23 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01370" href="/cgi-bin/secondgen/request.cgi?id=01370"> 01370 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/241/" title="link to Customer Page">Ma, Jianxin</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=241" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> PCR products </td>
+                <td> glycine max </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01370_MAJIANXIN_PCR_PRODUCTS_SCRATCH_2015-12-22">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 7 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-22 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01369" href="/cgi-bin/secondgen/request.cgi?id=01369"> 01369 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/167/" title="link to Customer Page">Iyer-Pascuzzi, Anjali</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=167" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> aRNA 1-5 </td>
+                <td> arabidopsis </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> Poly A+ RNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01369_IYERPASCUZZI_ARNA_1-5_QC_2015-12-22">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 5 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-22 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01368" href="/cgi-bin/secondgen/request.cgi?id=01368"> 01368 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Troubleshooting </td>
+                <td> salmonella </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01368_OLIVER_TROUBLESHOOTING_QC_2015-12-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 5 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-21 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01367" href="/cgi-bin/secondgen/request.cgi?id=01367"> 01367 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/31/" title="link to Customer Page">Bhunia, Arun K.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=31" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Ileum-QC </td>
+                <td> Mouse </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01367_BHUNIA_ILEUM_QC_QC_2015-12-21">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-21 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01366" href="/cgi-bin/secondgen/request.cgi?id=01366"> 01366 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/329/" title="link to Customer Page">Williams, Rod N.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=329" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Wood Frog 2 </td>
+                <td> Lithobates sylvaticus </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01366_RWILLIAMS_WOOD_FROG_2_MISEQ_2015-12-21">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 384 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-21 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01365" href="/cgi-bin/secondgen/request.cgi?id=01365"> 01365 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/513/" title="link to Customer Page">Yingst, Sam</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=513" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Prrsv-01 </td>
+                <td> unknown </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> cDNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01365_YINGST_PRRSV_01_MISEQ_2015-12-18">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 16 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-18 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01364" href="/cgi-bin/secondgen/request.cgi?id=01364"> 01364 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> AF </td>
+                <td> maize and Aspergillus flavus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01364_WOLOSHUK_AF_QC_2015-12-18">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 3 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-18 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01363" href="/cgi-bin/secondgen/request.cgi?id=01363"> 01363 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/213/" title="link to Customer Page">LaCount, Douglas</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=213" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq13 </td>
+                <td> plasmids </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01363_LACOUNT_WIDESEQ13_MISEQ_2015-12-18">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 4 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-18 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01362" href="/cgi-bin/secondgen/request.cgi?id=01362"> 01362 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/175/" title="link to Customer Page">Johal, Giri</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=175" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> BR-01 </td>
+                <td> maize </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01362_JOHAL_BR_01_MISEQ_2015-12-18">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 4 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-18 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01361" href="/cgi-bin/secondgen/request.cgi?id=01361"> 01361 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Trizol NX </td>
+                <td> Salmonella </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01361_OLIVER_TRIZOL_NX_QC_2015-12-17">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-17 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01360" href="/cgi-bin/secondgen/request.cgi?id=01360"> 01360 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/189/" title="link to Customer Page">Kasinski, Andrea</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=189" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Lung cancer exosomes </td>
+                <td> human </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01360_KASINSKI_LUNG_CANCER_EXOSOMES_MISEQ_2015-12-17">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 5 </td>
+                <td> Resequencing Genome </td>
+                <td> 2015-12-17 </td>
+            </tr>
+                        <tr class="hiseq_output in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01359" href="/cgi-bin/secondgen/request.cgi?id=01359"> 01359 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> B4-4 resub </td>
+                <td> Listeria </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01359_OLIVER_B4_4_RESUB_HISEQ_2015-12-17">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 1 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-17 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01358" href="/cgi-bin/secondgen/request.cgi?id=01358"> 01358 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/273/" title="link to Customer Page">Nakatsu, Cindy</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=273" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> AB VISTA day 0 day 14 </td>
+                <td> swine </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01358_NAKATSU_AB_VISTA_DAY_0_DAY_14_MISEQ_2015-12-16">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 120 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-16 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01357" href="/cgi-bin/secondgen/request.cgi?id=01357"> 01357 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/31/" title="link to Customer Page">Bhunia, Arun K.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=31" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> inestine pilot </td>
+                <td> Mus musculus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01357_BHUNIA_INESTINE_PILOT_QC_2015-12-16">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-16 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01356" href="/cgi-bin/secondgen/request.cgi?id=01356"> 01356 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/213/" title="link to Customer Page">LaCount, Douglas</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=213" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Total RNA QC-01 </td>
+                <td> Human </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01356_LACOUNT_TOTAL_RNA_QC-01_QC_2015-12-16">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-16 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01355" href="/cgi-bin/secondgen/request.cgi?id=01355"> 01355 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/189/" title="link to Customer Page">Kasinski, Andrea</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=189" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Micro RNA drivers </td>
+                <td> human </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01355_KASINSKI_MICRO_RNA_DRIVERS_RAPID_2015-12-15">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> Resequencing Genome </td>
+                <td> 2015-12-15 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01354" href="/cgi-bin/secondgen/request.cgi?id=01354"> 01354 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/80/" title="link to Customer Page">Dilkes, Brian</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=80" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> NA2-Dev Tassels </td>
+                <td> Maize </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01354_DILKES_NA2_DEV_TASSELS_HISEQ_2015-12-15">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-15 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01353" href="/cgi-bin/secondgen/request.cgi?id=01353"> 01353 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/80/" title="link to Customer Page">Dilkes, Brian</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=80" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> DMX-SAM </td>
+                <td> Maize </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01353_DILKES_DMX_SAM_HISEQ_2015-12-15">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-15 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01352" href="/cgi-bin/secondgen/request.cgi?id=01352"> 01352 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/334/" title="link to Customer Page">SanMiguel, Phillip J.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=334" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq12-QC </td>
+                <td> various </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01352_SANMIGUEL_WIDESEQ12_QC_QC_2015-12-14">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 5 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-14 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01351" href="/cgi-bin/secondgen/request.cgi?id=01351"> 01351 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/340/" title="link to Customer Page">Scofield, Steve</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=340" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq13 </td>
+                <td> plasmids </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01351_SCOFIELD_WIDESEQ13_MISEQ_2015-12-14">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 8 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-14 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01350" href="/cgi-bin/secondgen/request.cgi?id=01350"> 01350 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/401/" title="link to Customer Page">Watts, Val J.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=401" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> SENSITIZATION SCREEN 2 continued  2 continue </td>
+                <td> human </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> cDNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01350_WATTS_SENSITIZATION_SCREEN_2_CONTINUED_2_CONTINUE_MISEQ_2015-12-14">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 6 </td>
+                <td> Resequencing Genome </td>
+                <td> 2015-12-14 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01349" href="/cgi-bin/secondgen/request.cgi?id=01349"> 01349 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/56/" title="link to Customer Page">Chapple, Clinton C.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=56" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> CHIP </td>
+                <td> Arabidopsis </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Chromatin Immunoprecipitation (ChIP) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01349_CHAPPLE_CHIP_QC_2015-12-14">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-14 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01348" href="/cgi-bin/secondgen/request.cgi?id=01348"> 01348 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/329/" title="link to Customer Page">Williams, Rod N.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=329" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> #2 </td>
+                <td> Wood Frog </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01348_RWILLIAMS__2_MISEQ_2015-12-11">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-11 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01347" href="/cgi-bin/secondgen/request.cgi?id=01347"> 01347 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/125/" title="link to Customer Page">Gowher, Humaira</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=125" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> PP enhancer DNA ME III </td>
+                <td> Mus musculus </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01347_GOWHER_PP_ENHANCER_DNA_ME_III_MISEQ_2015-12-11">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 30 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-11 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01346" href="/cgi-bin/secondgen/request.cgi?id=01346"> 01346 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> QC </td>
+                <td> Listeria monocytogenes </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01346_OLIVER_QC_QC_2015-12-11">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-11 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01345" href="/cgi-bin/secondgen/request.cgi?id=01345"> 01345 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/401/" title="link to Customer Page">Watts, Val J.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=401" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> sensitization screen 2nd </td>
+                <td> human </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> cDNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01345_WATTS_SENSITIZATION_SCREEN_2ND_MISEQ_2015-12-11">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 1 </td>
+                <td> Resequencing Genome </td>
+                <td> 2015-12-11 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01344" href="/cgi-bin/secondgen/request.cgi?id=01344"> 01344 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/254/" title="link to Customer Page">Messick, Joanne</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=254" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> microRNA-cat-01 </td>
+                <td> felis catus </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x50 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01344_MESSICK_MICRORNA_CAT-01_RAPID_2015-12-11">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 9 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-11 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01343" href="/cgi-bin/secondgen/request.cgi?id=01343"> 01343 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> QC-5 </td>
+                <td> maize and A. flavous </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> no </td>
+                <td> 
+                                 </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01343_WOLOSHUK_QC_5_QC_2015-12-10">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 8 </td>
+                <td> LibraryQC </td>
+                <td> 2015-12-10 </td>
+            </tr>
+                        <tr class="hiseqrapid in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01342" href="/cgi-bin/secondgen/request.cgi?id=01342"> 01342 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/11/" title="link to Customer Page">Andrisani, Ourania</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=11" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> DDX5 functioning HBV rep </td>
+                <td> human </td>
+                <td> hiseqrapid </td>
+                <td> v1 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01342_ANDRISANI_DDX5_FUNCTIONING_HBV_REP_HISEQ_2015-12-09">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 4 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-09 </td>
+            </tr>
+                        <tr class="hiseq_output in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01341" href="/cgi-bin/secondgen/request.cgi?id=01341"> 01341 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/194/" title="link to Customer Page">Kirchmaier, Ann</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=194" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> HL60 </td>
+                <td> Human </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01341_KIRCHMAIER_HL60_HISEQ_2015-12-09">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-09 </td>
+            </tr>
+                        <tr class="hiseq_output in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01340" href="/cgi-bin/secondgen/request.cgi?id=01340"> 01340 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/416/" title="link to Customer Page">Woeste, Keith E.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=416" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Castania round 4 </td>
+                <td> Castania </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01340_WOESTE_CASTANIA_ROUND_4_HISEQ_2015-12-08">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 6 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2015-12-08 </td>
+            </tr>
+                        <tr class="miseq in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01339" href="/cgi-bin/secondgen/request.cgi?id=01339"> 01339 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/273/" title="link to Customer Page">Nakatsu, Cindy</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=273" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> AB Vista </td>
+                <td> swine </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01339_NAKATSU_AB_VISTA_MISEQ_2015-12-08">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 2 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-08 </td>
+            </tr>
+                        <tr class="wideseq terminated">
+                <td>
+                    <a target="_blank" title="More info about request #01338" href="/cgi-bin/secondgen/request.cgi?id=01338"> 01338 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/473/" title="link to Customer Page">Jacoby, Dave</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=473" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Test </td>
+                <td> test </td>
+                <td> wideseq </td>
+                <td> MiSeq 1x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01338_DJACOBY_TEST_SCRATCH_2015-12-08">wiki</a> </td>
+                <td> Terminated </td>
+                <td> 4 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-08 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01337" href="/cgi-bin/secondgen/request.cgi?id=01337"> 01337 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/514/" title="link to Customer Page">Fortuna, Ann-Marie</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=514" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> CIG rhizobia repeat </td>
+                <td> Rhizobia, Ammonia Oxidizing Archaea, Ammonia Oxidizing Bacteria, Denitrifying Bacteria </td>
+                <td> miseq </td>
+                <td> MiSeq 2x250 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Amplicons </td>
+                <td> <a href="/cgi-bin/wiki/HR_01337_FORTUNA_CIG_RHIZOBIA_REPEAT_MISEQ_2015-12-04">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 231 </td>
+                <td> Amplicon </td>
+                <td> 2015-12-04 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01336" href="/cgi-bin/secondgen/request.cgi?id=01336"> 01336 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/495/" title="link to Customer Page">Lisch, Damon</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=495" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq12 </td>
+                <td> pcr products </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01336_LISCH_WIDESEQ12_MISEQ_2015-12-04">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 4 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-04 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01335" href="/cgi-bin/secondgen/request.cgi?id=01335"> 01335 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/250/" title="link to Customer Page">Meilan, Richard</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=250" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> B1 DNA </td>
+                <td> plasmid </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Plasmids </td>
+                <td> <a href="/cgi-bin/wiki/HR_01335_MEILAN_B1_DNA_MISEQ_2015-12-03">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 1 </td>
+                <td> WideSeq </td>
+                <td> 2015-12-03 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01334" href="/cgi-bin/secondgen/request.cgi?id=01334"> 01334 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/189/" title="link to Customer Page">Kasinski, Andrea</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=189" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Clash-01 </td>
+                <td> Human </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01334_KASINSKI_CLASH_01_RAPID_2015-12-03">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 13 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2015-12-03 </td>
+            </tr>
+                        <tr class="hiseq_output in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01333" href="/cgi-bin/secondgen/request.cgi?id=01333"> 01333 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/284/" title="link to Customer Page">Oliver, Haley</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=284" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> LM-02 </td>
+                <td> Listeria </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01333_OLIVER_LM_02_HISEQ_2015-12-03">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 15 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-03 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01332" href="/cgi-bin/secondgen/request.cgi?id=01332"> 01332 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/421/" title="link to Customer Page">Xu, Jin-Rong</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=421" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> puk1 cDNA Wideseq12 </td>
+                <td> Fusarium </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> cDNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01332_XU_PUK1_CDNA_WIDESEQ12_MISEQ_2015-12-03">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 5 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-03 </td>
+            </tr>
+                        <tr class="wideseq terminated">
+                <td>
+                    <a target="_blank" title="More info about request #01331" href="/cgi-bin/secondgen/request.cgi?id=01331"> 01331 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/421/" title="link to Customer Page">Xu, Jin-Rong</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=421" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq12 </td>
+                <td> pcr products </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01331_XU_WIDESEQ12_MISEQ_2015-12-02">wiki</a> </td>
+                <td> Terminated </td>
+                <td> 5 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-12-02 </td>
+            </tr>
+                        <tr class="miseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01330" href="/cgi-bin/secondgen/request.cgi?id=01330"> 01330 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/170/" title="link to Customer Page">Dubcovsky, Jorge</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=170" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> BAC-12-01-WideSeq12 </td>
+                <td> unknown </td>
+                <td> miseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> BAC/Fosmid/etc. </td>
+                <td> <a href="/cgi-bin/wiki/HR_01330_JDUBCOVSKY_BAC_12-01-WIDESEQ12_MISEQ_2015-12-01">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 5 </td>
+                <td> DenovoAssembly Genome </td>
+                <td> 2015-12-01 </td>
+            </tr>
+                        <tr class="hiseq_output in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01329" href="/cgi-bin/secondgen/request.cgi?id=01329"> 01329 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/241/" title="link to Customer Page">Ma, Jianxin</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=241" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> DT2 </td>
+                <td> Glycine max </td>
+                <td> hiseq_output </td>
+                <td> HiSeq 2x100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01329_MAJIANXIN_DT2_HISEQ_2015-11-30">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 3 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-11-30 </td>
+            </tr>
+                        <tr class="hiseq_ho in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01328" href="/cgi-bin/secondgen/request.cgi?id=01328"> 01328 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/421/" title="link to Customer Page">Xu, Jin-Rong</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=421" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Neospora strains </td>
+                <td> Neurospora crassa </td>
+                <td> hiseq_ho </td>
+                <td> HiSeq 2X100 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Genomic DNA </td>
+                <td> <a href="/cgi-bin/wiki/HR_01328_XU_NEOSPORA_STRAINS_RAPID_2015-11-30">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 3 </td>
+                <td> Resequencing Genome </td>
+                <td> 2015-11-30 </td>
+            </tr>
+                        <tr class="hiseq_rapid in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01327" href="/cgi-bin/secondgen/request.cgi?id=01327"> 01327 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/162/" title="link to Customer Page">Hunt, Greg J.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=162" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> Honey bee piRNA-1 </td>
+                <td> Apis </td>
+                <td> hiseq_rapid </td>
+                <td> HiSeq 1x50 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01327_HUNT_HONEY_BEE_PIRNA-1_RAPID_2015-11-30">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 12 </td>
+                <td> SmallRNA </td>
+                <td> 2015-11-30 </td>
+            </tr>
+                        <tr class="wideseq in_progress">
+                <td>
+                    <a target="_blank" title="More info about request #01326" href="/cgi-bin/secondgen/request.cgi?id=01326"> 01326 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/282/" title="link to Customer Page">Ogas, Joseph P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=282" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> WideSeq12 </td>
+                <td> pcr products </td>
+                <td> wideseq </td>
+                <td> MiSeq 2x150 </td>
+                <td> yes </td>
+                <td> 
+                                 yes                                  </td>
+                <td> Other Source </td>
+                <td> <a href="/cgi-bin/wiki/HR_01326_OGAS_WIDESEQ12_MISEQ_2015-11-25">wiki</a> </td>
+                <td> In Progress </td>
+                <td> 9 </td>
+                <td> DenovoAssembly Transcriptome </td>
+                <td> 2015-11-25 </td>
+            </tr>
+                        <tr class="qc in_queue">
+                <td>
+                    <a target="_blank" title="More info about request #01325" href="/cgi-bin/secondgen/request.cgi?id=01325"> 01325 </a>
+                </td>
+                <td> 
+                    <a  target="_blank" 
+                        data-sorthelp-"" 
+                        href="/cgi-bin/customer/Customer/customer.cgi/417/" title="link to Customer Page">Woloshuk, Charles P.</a>&nbsp;<a 
+                        class="no_underline" target="_blank" href="/cgi-bin/secondgen/requests.cgi?pi=417" title="link to this PI's Requests">&#9654;</a>
+                </td>
+                <td> AF QC-1 </td>
+                <td> Aspergillus flavus </td>
+                <td> qc </td>
+                <td> None </td>
+                <td> yes </td>
+                <td> 
+                                 no                                  </td>
+                <td> RNA (Total) </td>
+                <td> <a href="/cgi-bin/wiki/HR_01325_WOLOSHUK_AF_QC-1_QC_2015-11-25">wiki</a> </td>
+                <td> In Queue </td>
+                <td> 5 </td>
+                <td> LibraryQC </td>
+                <td> 2015-11-25 </td>
+            </tr>
+                    </tbody>
+
+    </table>
+
+<!-- REQUESTS -->
+</div>
+
+<!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Purdue Genomics Core Lab.</p>
+      </div>
+    </footer>
+<!-- FOOTER -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+--> 
+
+
+
+    <script src="/lib/TABLE-2.23.3.min.jsz"></script>
+    <script src="/lib/tablesorter_tools.js" ></script></body>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="/lib/secondgen/request_pi.js" ></script></body>
+<!--
+-->
+    <script>//<![CDATA[
+        $( function () {
+            // $('#disableme').prop( 'disabled' , true );
+            } ) ;
+
+    /* unfortunately, this is mostly custom to page */
+$(function() {
+    $.tablesorter.addParser({
+        id: 'data',
+        is: function(s) {
+            return false;
+            },
+        format: function(s, table, cell, cellIndex) {
+            var $cell = $(cell);
+            if (cellIndex === 1) {
+                return $cell.attr('data-date') || s;
+                }
+            return s;
+            },
+        type: 'text'
+        });
+    $('.table_print').click(function(){
+        $('.tablesorter').trigger('printTable');
+        });
+    $("#requests_table").tablesorter({
+        headers: {1: { sorter: 'data' } },
+        sortList: [[0, 0]],
+        widgets: ['columnSelector', 'filter', 'print', 'saveSort', 'zebra' ],
+        widgetOptions: {
+            columnSelector_container : $('#columnSelector'),
+            columnSelector_name : 'data-name',
+            filter_childRows: false,
+            filter_columnFilters: true,
+            filter_cssFilter: 'tablesorter-filter',
+            filter_functions: null,
+            filter_hideFilters: false,
+            filter_ignoreCase: true,
+            filter_reset: 'button.reset',
+            filter_searchDelay: 300,
+            filter_startsWith: false,
+            filter_useParsedData: false
+        }
+    });
+    $('.search').click(function() {
+        var obj = $(this);
+        tablesorter_tools.tools.search(obj);
+        });
+    });
+    //]]> 
+</script>
+
+</body>
+</html>
