@@ -9,6 +9,8 @@ appname: "Dancer Demo"
 # views/layouts/main.tt)
 layout: "bootstrap"
 
+environment: "development"
+
 # when the charset is set to UTF-8 Dancer2 will handle for you
 # all the magic of encoding and decoding. You should not care
 # about unicode within your app when this setting is set (recommended).
@@ -19,6 +21,7 @@ charset: "UTF-8"
         #     config:
         #         provider: Config
         #         users:
+
         #             - user: dave
         #               pass: pass
         #               roles:
@@ -30,37 +33,47 @@ charset: "UTF-8"
         #                 - User
 # Under normal circumstances, login/pass in a repo is a no-no, but this is demo only
 plugins:
+    # DBIx::Class aka Database
     DBIC:
         default:
             dsn: dbi:mysql:database=dancer_demo;host=localhost
             schema_class: MyApp::Schema
             user: dancer 
             password: password
+    # Authentication
     Auth::Extensible:
         login_page_handler: 'Demo::login_page_handler'
         permission_denied_page_handler: 'Demo::permission_denied_page_handler'
+        record_lastlogin:   true
+        user_home_page:     '/user'
+        exit_page:          '/'
         realms:
             users:
-                provider: 'DBIC'
-                users_source: 'User'
-                roles_source: 'Role'
-                user_roles_source: 'UserRole'
+                provider:                   'DBIC'
+                users_source:               'User'
+                roles_source:               'Role'
+                user_roles_source:          'UserRole'
                 users_username_column:      username
                 users_password_column:      password
                 roles_role_column:          rolename
                 users_lastlogin_column:     lastlogin 
                 users_pwresetcode_column:   pw_reset_code 
                 users_pwchanged_column:     pw_changed 
-                roles_key: roles
+                roles_key:                  roles
                 user_valid_conditions:
                     deleted: 0
-                    # account_request: 
-                    #     "<": 1
+    Email:
+        transport:
+            SMTP:
+                ssl: 1
+                sasl_username: djacoby
+                sasl_password: 36earwax
+                host: 'smtp.purdue.edu'
+                port: 465
 
 # template engine
 # simple: default and very basic template engine
 # template_toolkit: TT
-
 # template: "simple"
 
 template: "template_toolkit"
@@ -69,6 +82,8 @@ engines:
     template_toolkit:
       start_tag: '[%'
       end_tag:   '%]'
+
+# session: "YAML"
 
 # session engine
 #
@@ -87,9 +102,9 @@ engines:
 #    Simple:
 #      cookie_name: testapp.session
 #
-#engines:
-#  session:
-#    YAML:
-#      cookie_name: eshop.session
-#      is_secure: 1
-#      is_http_only: 1
+engines:
+  session:
+    YAML:
+      cookie_name: gcore.session
+      is_secure: 1
+      is_http_only: 1

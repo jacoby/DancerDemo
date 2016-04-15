@@ -16,6 +16,83 @@ my $pass  = 'password' ;
 my $schema
     = MyApp::Schema->connect( $dbn, $login, $pass, { AutoCommit => 1 }, ) ;
 
+add_user_role( 'test', 'tech' ) ;
+list_user_roles() ;
+remove_user_role( 'test', 'tech' ) ;
+list_user_roles() ;
+
+sub add_user_role {
+    my ( $username, $rolename ) = @_ ;
+    my $user = _get_user($username) ;
+    my $role = _get_role($rolename) ;
+    say $username ;
+    say $rolename ;
+    say join ':', $user->username, $user->id ;
+    say join ':', $role->rolename, $role->id ;
+    my @user_roles = $schema->resultset('UserRole')->search(
+        {   user_id => $user->id,
+            role_id => $role->id,
+            },
+        {}
+        ) ;
+    unless ( scalar @user_roles ) {
+        $schema->resultset('UserRole')->create(
+            {   user_id => $user->id,
+                role_id => $role->id,
+                }
+            ) ;
+        }
+    }
+
+sub remove_user_role {
+    my ( $username, $rolename ) = @_ ;
+    my $user = _get_user($username) ;
+    my $role = _get_role($rolename) ;
+    say $username ;
+    say $rolename ;
+    say join ':', $user->username, $user->id ;
+    say join ':', $role->rolename, $role->id ;
+    my @user_roles = $schema->resultset('UserRole')->search(
+        {   user_id => $user->id,
+            role_id => $role->id,
+            },
+        {}
+        ) ;
+    if ( scalar @user_roles ) {
+        for my $user_role ( @user_roles ) {
+            $user_role->delete ;
+            }
+        }
+    }
+
+sub _get_user {
+    my ($username) = @_ ;
+    my @users = $schema->resultset('User')
+        ->search( { 'me.username' => $username }, {}, ) ;
+    return shift @users ;
+    }
+
+sub _get_role {
+    my ($rolename) = @_ ;
+    my @roles = $schema->resultset('Role')
+        ->search( { 'me.rolename' => $rolename }, {}, ) ;
+    return shift @roles ;
+    }
+
+sub list_user_roles {
+    my @user_roles = $schema->resultset('UserRole')->search(
+        {},
+        {   join     => qw{ user role },
+            prefetch => qw{ user role },
+            }
+        ) ;
+    for my $ur ( sort { $a->user->name cmp $b->user->name } @user_roles ) {
+        say join "\t", '', $ur->user->username, $ur->role->rolename, ;
+        }
+    }
+
+exit ;
+
 say 'USER ROLES ' . '-' x 69 ;
 my @user_roles = $schema->resultset('UserRole')->search(
     { user_id => 3 },
@@ -27,6 +104,7 @@ for my $ur ( sort { $a->user->name cmp $b->user->name } @user_roles ) {
     say join "\t", '',
         $ur->user->username,
         $ur->user->name,
+        $ur->user->lastlogin || 'null',
         $ur->role->rolename,
         ;
     }
@@ -38,24 +116,28 @@ for my $role (@roles) {
     my @user_roles = $role->user_roles ;
     say join "\t", '', $role->id, $role->rolename ;
     for my $ur (@user_roles) {
-        say "\t\t" . $ur->user->name;
+        say "\t\t" . $ur->user->name ;
         }
     }
 
 say 'USERS ' . '-' x 74 ;
-my @users = $schema->resultset('User')->search( {}, {
-    prefetch => {'user_roles' => 'role'}
-    }, ) ;
+my @users = $schema->resultset('User')
+    ->search( {}, { prefetch => { 'user_roles' => 'role' } }, ) ;
 for my $user (@users) {
     my @user_roles = $user->user_roles ;
-    say join "\t", '', 
-        $user->id, 
-        $user->name, 
-        $user->username, 
-        $user->email, 
+
+    # if ( ! defined $user->lastlogin ) {
+    #     $user->update({ lastlogin => \'NOW()' }) ;
+    #     }
+    say join "\t", '',
+        $user->id,
+        $user->name,
+        $user->username,
+        $user->lastlogin || 'null',
+        $user->email,
         ;
     for my $ur (@user_roles) {
-        say "\t\t" . $ur->role->rolename;
+        say "\t\t" . $ur->role->rolename ;
         }
     }
 

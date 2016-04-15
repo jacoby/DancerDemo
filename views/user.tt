@@ -1,0 +1,141 @@
+[%#
+
+
+                          ##   ##
+## ##  ###  ###  ## #    #### ####
+## ## ##   ## ## ####     ##   ##
+## ## ###  ## ## ##       ##   ##
+## ##  ### ##### ##       ##   ##
+## ##   ## ##    ##   ##  ##   ##
+ ## # ###   #### ##   ##   ##   ##
+
+
+This template is used by users to edit their profiles, and by techs
+and admins to edit and create the profiles of others.
+
+Rules:
+    USERS 
+        - can view   their username
+        - can change their full name 
+        - can change their password
+        - can view   their roles
+    TECHS
+        - can view   all usernames  except admins
+        - can change all full names except admins
+        - can change all passwords  except admins
+        - can view   all roles      except admins
+        - can mark   as  deleted    except admins
+    ADMINS
+        - can change all usernames  
+        - can change all full names 
+        - can change all passwords  
+        - can change all roles      
+        - can mark   as  deleted
+
+%]
+
+[% IF is_new %]
+<h2> Create New User </h2>
+[% ELSE %]
+<h2> Edit <strong>[% username %]</strong> </h2>
+[% END %]
+
+[% IF is_admin || is_tech %]
+    [% IF is_new %]
+<form method="post" action="/dump">
+</form>
+<form method="post" action="/user/new">
+    <input type="hidden" value="true" name="is_new">
+    [% ELSE %]
+<form method="post" action="/user/[% user.username %]">
+    [% END %]
+[% ELSE %]
+<form method="post" action="/user/">
+[% END %]
+    <input type="hidden" value="[% user.id %]" name="user_id">
+
+[% IF is_admin || is_new %]
+    <input type="hidden" value="[% user.username %]" name="username">
+    <div class="form-group">
+        <label for="user_username">Username</label>
+        <input  type="text" 
+                class="form-control" 
+                id="user_username" 
+                name="user_username" 
+                placeholder="Username"
+                value="[% user.username %]"
+                >
+    </div>
+[% ELSE %]
+    <input type="hidden" value="[% user.username %]" name="user_username">
+[% END %]
+
+    <div class="form-group">
+        <label for="user_name">Name</label>
+        <input  type="text" 
+                class="form-control" 
+                id="user_name" 
+                name="user_name" 
+                placeholder="Full Name"
+                value="[% user.name %]"
+                >
+    </div>
+
+    <div class="form-group">
+        <label for="user_email">Email Address</label>
+        <input  type="email" 
+                class="form-control" 
+                id="user_email" 
+                name="user_email" 
+                placeholder="Email Address"
+                value="[% user.email %]"
+                >
+    </div>
+
+    <div class="form-group">
+        <label for="user_password">Password</label>
+        <input  
+                type="password" 
+                class="form-control" 
+                id="user_password" 
+                name="user_password" 
+                placeholder="Password"
+                [%# pattern="(^.{8,}$)" %]
+                >
+    </div>
+
+    <div class="form-group">
+        <label for="user_roles">Roles</label>
+        <ul id="user_roles">
+        [% IF is_admin %]
+            <li><label> Admin     <input type="checkbox" name="role_admin"     [% IF user.roles.admin == 1     %]checked="checked"[% END %]></label></li>
+            <li><label> Developer <input type="checkbox" name="role_developer" [% IF user.roles.developer == 1 %]checked="checked"[% END %]></label></li>
+            <li><label> Tech      <input type="checkbox" name="role_tech"      [% IF user.roles.tech == 1      %]checked="checked"[% END %]></label></li>
+            <li><label> User      <input type="checkbox" name="role_user"      [% IF user.roles.user == 1      %]checked="checked"[% END %]></label></li>
+        [% ELSE %]
+            [% IF user.roles.admin == 1     %]<li> Admin     </li>[% END %]
+            [% IF user.roles.developer == 1 %]<li> Developer </li>[% END %]
+            [% IF user.roles.tech == 1      %]<li> Tech      </li>[% END %]
+            [% IF user.roles.user == 1      %]<li> User      </li>[% END %]
+        [% END %]
+        </ul>
+<!--         <label for="user_password">Password</label>
+        <input  type="text" 
+                class="form-control" 
+                id="user_password" 
+                name="user_password" 
+                placeholder="Password"
+                > -->
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+
+</form>
+
+[% IF is_admin && dump %]
+<div>
+    <pre>[% dump %]</pre>
+</div>
+[% END %]
